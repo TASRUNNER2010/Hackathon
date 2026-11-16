@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore a next-day daily average PM2.5 prediction, compare it with a baseline, and review the model evidence.">
+<title>AirAware — Next-day PM2.5</title>
+<style>
+:root{--sky:#87ceeb;--white:#fff;--pink:#ff69b4;--ink:#14374a;--muted:#355d70;--line:#b5d5e3;--pale:#f0f9fd;--rose:#fff0f7;--deep-pink:#991954;--sans:'Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--white);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}h1,h2,h3,p{margin:0}h1,h2,h3{line-height:1.25;letter-spacing:-.025em}h1{font-size:clamp(30px,4vw,44px);font-weight:650}h2{font-size:24px}h3{font-size:19px}a{color:inherit;text-underline-offset:4px}button,input,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;background:var(--pale);border-color:var(--line);color:var(--muted)}[hidden]{display:none!important}:focus-visible{outline:3px solid var(--deep-pink);outline-offset:4px}input,select{width:100%;min-width:0;min-height:48px;padding:10px 12px;background:var(--white);border:1px solid #7395a6;border-radius:7px}input::placeholder{color:var(--muted)}fieldset{margin:0;padding:0;border:0;min-width:0}fieldset:disabled input{background:var(--pale)}output,strong{font-variant-numeric:tabular-nums}.shell{width:min(1160px,calc(100% - 64px));margin:auto}.muted{color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.09em;font-weight:650;text-transform:uppercase}.brand{font-size:25px;font-weight:700;letter-spacing:-1px;text-decoration:none;white-space:nowrap}.brand span{color:var(--deep-pink)}.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:82px}.intro{background:var(--pale);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 0}.intro h1{margin:7px 0 12px}.intro p:last-child{max-width:760px;color:var(--muted)}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;padding-top:32px;padding-bottom:36px}.card{border:1px solid var(--line);border-radius:12px;padding:26px;min-width:0}.card-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.step{font-size:13px;font-weight:650;white-space:nowrap}.field{display:flex;flex-direction:column;gap:7px;min-width:0}.field label{font-size:15px;font-weight:600}.field+.field.control{margin-top:17px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}.field.full{grid-column:1/-1}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--pink);border-radius:7px;background:var(--pink);padding:12px 18px;min-height:49px;font-weight:650;text-decoration:none}.button:hover:not(:disabled){background:var(--rose);border-color:var(--deep-pink)}.form-card .button{width:100%}.hint{font-size:14px;color:var(--muted);margin-top:13px;overflow-wrap:anywhere}.form-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);padding-top:17px;margin-top:20px;font-size:14px}.text-button{border:0;background:none;padding:4px 0;font-size:15px;font-weight:600;color:var(--deep-pink);text-decoration:underline;text-underline-offset:4px}.error{margin-top:14px;color:var(--deep-pink);font-size:15px;font-weight:600}.pill{border:1px solid var(--line);border-radius:30px;padding:4px 10px;font-size:13px;font-weight:600;text-align:center}.reading{background:var(--pale);border-radius:9px;padding:21px;margin-bottom:22px}.reading-top{display:flex;flex-direction:column;gap:4px;font-size:15px}.reading-top time{font-weight:650}.reading-number{display:flex;align-items:baseline;flex-wrap:wrap;gap:12px;margin:12px 0}.reading-number output{font-size:clamp(54px,6vw,76px);font-weight:650;letter-spacing:-.055em;line-height:1.15;overflow-wrap:anywhere;min-width:0;max-width:100%}.reading-number span{font-size:17px}.reading-context{font-size:15px}.reading-foot{font-size:14px;margin-top:13px;font-weight:600;overflow-wrap:anywhere}.comparison{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--line)}.comparison p{font-size:15px;font-weight:600}.comparison small{display:block;font-size:14px;color:var(--muted);margin-top:4px}.comparison strong{font-size:25px;font-weight:650;text-align:right;white-space:nowrap}.comparison strong small{font-size:14px}.interpretation{font-size:15px;margin:5px 0 19px}.notice{font-size:14px;color:var(--muted);margin-top:15px}.evidence{padding-bottom:38px}details{border:1px solid var(--line);border-radius:12px;padding:0 26px}summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0}summary::-webkit-details-marker{display:none}summary h2{font-size:21px}summary p{font-size:15px;color:var(--muted);margin-top:5px}.plus{font-size:27px}details[open] .plus{transform:rotate(45deg)}.evidence-content{padding:0 0 25px}.mae-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}.metric{background:var(--pale);padding:19px;border-radius:8px;border-left:4px solid var(--sky)}.metric.model{background:var(--rose);border-left-color:var(--pink)}.metric p{font-size:15px;font-weight:600;overflow-wrap:anywhere}.metric strong{font-size:30px}.metric span{font-size:14px;margin-left:7px}.evidence-caption{font-size:15px;margin:17px 0}.chart-wrap{border:1px solid var(--line);border-radius:8px;padding:20px}.chart-title{font-size:16px;font-weight:600}.legend{display:flex;gap:20px;flex-wrap:wrap;margin:12px 0;font-size:14px}.legend span{display:flex;align-items:center;gap:7px}.legend i{width:22px;border-top:3px solid var(--deep-pink)}.legend .actual i{border-color:var(--ink);border-top-style:dashed}.chart-wrap svg{display:block;width:100%;height:auto}.chart-wrap svg text{font:14px var(--sans);fill:var(--ink)}.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:25px}.source-grid h3{font-size:17px;margin-bottom:8px}.source-grid p{font-size:15px;color:var(--muted);overflow-wrap:anywhere}.source-grid p+p{margin-top:8px}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:14px}.footer-row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.skip{position:absolute;left:20px;top:-100px;z-index:3;background:var(--white);padding:10px}.skip:focus{top:10px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:900px){.shell{width:calc(100% - 40px)}.workspace{gap:20px}.card{padding:22px}.card-header{align-items:flex-start;flex-wrap:wrap}.comparison strong{font-size:22px}}
+@media(max-width:700px){.workspace{grid-template-columns:1fr;padding-top:22px}.intro{padding:25px 0}.nav{min-height:72px}.card{padding:20px}.fields{gap:16px 13px}.reading{padding:18px}.reading-number output{font-size:64px}.source-grid{grid-template-columns:1fr;gap:22px}.mae-row{grid-template-columns:1fr}.chart-wrap{padding:14px}details{padding:0 20px}.chart-wrap svg text{font-size:18px}}
+@media(max-width:380px){.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.shell{width:calc(100% - 28px)}.card{padding:17px}.comparison{align-items:flex-start}.comparison strong{font-size:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#predict-form">Skip to prediction</a>
+<header class="shell nav"><a class="brand" href="#">AirAware<span>.</span></a></header>
+<main>
+  <section class="intro" aria-labelledby="page-title"><div class="shell"><p class="eyebrow" id="station-name">Rutgers University, NJ · Historical prototype</p><h1 id="page-title">Predict next-day air quality.</h1><p>Choose an input date. AirAware automatically uses recorded pollution and weather to predict the following day.</p></div></section>
+  <div class="shell workspace">
+    <form class="card form-card" id="predict-form">
+      <div class="card-header"><h2>Choose an input date</h2><span class="step">1. Input</span></div>
+      <div class="field control"><label for="calendar-date">2026 input date (predicts the following day)</label><input id="calendar-date" type="date" min="2026-01-01" max="2026-12-31" required disabled><p class="hint" id="history-window">Use this date and the two preceding calendar days.</p></div>
+      <p class="hint">The ensemble with history automatically uses this day and the two preceding days of pollution, plus input-day weather.</p>
+      <button class="button" id="predict" type="submit" disabled>Predict next-day PM2.5</button>
+      <p class="hint" id="input-hint">Recorded pollution and weather are filled automatically for your chosen date.</p>
+      <p class="error" id="load-error" role="alert" hidden></p>
+      <p class="hint" id="data-status" role="status">Loading prediction data…</p>
+    </form>
+    <section class="card" id="result" aria-labelledby="result-title">
+      <div class="card-header"><h2 id="result-title">Your prediction</h2><span class="step">2. Result</span></div>
+      <div aria-live="polite" aria-atomic="true">
+        <div class="reading"><div class="reading-top"><span>Predicted daily average PM2.5</span><time id="target-date">Next day</time></div><div class="reading-number"><output id="prediction">—</output><span id="prediction-unit">µg/m³</span></div><p class="reading-context" id="result-context">Load model data to display a numeric prediction. No estimated value has been calculated yet.</p><p class="reading-foot"><span id="model-name">No model selected</span> · <span id="result-badge">Awaiting data</span></p></div>
+        <p class="interpretation" id="interpretation">The baseline assumes the next day's PM2.5 equals the input day's average.</p>
+        <div class="comparison"><div><p>Persistence baseline</p><small>An estimate that repeats the input day</small></div><strong><span id="baseline">—</span><small class="result-unit">µg/m³</small></strong></div>
+        <div class="comparison"><div><p>Change from input day</p><small>Prediction minus the baseline</small></div><strong><span id="change">—</span><small class="result-unit">µg/m³</small></strong></div>
+        <div class="comparison" id="input-actual-row" hidden><div><p>Actual air quality on input day</p><small id="input-actual-date"></small></div><strong><span id="input-actual">—</span><small class="result-unit">µg/m³</small><small id="input-aqi"></small></strong></div>
+        <div class="comparison" id="actual-row" hidden><div><p>Actual air quality on forecast day</p><small id="actual-date">Recorded forecast-day observation</small></div><strong><span id="actual">—</span><small class="result-unit">µg/m³</small><small id="actual-aqi"></small></strong></div>
+        <p class="notice" id="result-note">Historical estimates, not a live forecast or an official air-quality advisory. PM2.5 concentration is not an AQI score.</p>
+      </div>
+    </section>
+  </div>
+  <section class="shell evidence" id="evidence" aria-label="Model evidence">
+    <details id="evidence-details"><summary><div><h2>3. Understand the result</h2><p>Model accuracy, data sources, and limitations.</p></div><span class="plus" aria-hidden="true">+</span></summary><div class="evidence-content">
+      <p id="evidence-empty">Load model data to see measured validation performance.</p>
+      <div id="evidence-results" hidden><p id="validation-period" class="muted"></p><div class="mae-row"><div class="metric model"><p id="model-mae-label">Ensemble · validation MAE</p><strong id="model-mae">—</strong><span class="result-unit">µg/m³</span></div><div class="metric"><p>Persistence baseline · validation MAE</p><strong id="baseline-mae">—</strong><span class="result-unit">µg/m³</span></div></div><p class="evidence-caption" id="mae-caption"></p><div class="chart-wrap"><p class="chart-title" id="chart-title">Predicted vs. observed daily average PM2.5</p><div class="legend"><span><i></i><span id="model-legend">Model prediction</span></span><span class="actual"><i></i>Observed measurement</span></div><div id="validation-chart"></div></div></div>
+      <div class="source-grid"><div><h3>Data sources</h3><p id="sources">Sources and training dates will follow the loaded model export.</p><p id="training-period"></p></div><div><h3>Limitations</h3><p>One station cannot represent every neighborhood. Daily averages can hide short pollution spikes, and models can miss unusual events. Validation scores describe historical performance. Keep test data reserved until model development is complete.</p></div></div>
+    </div></details>
+  </section>
+</main>
+<footer><div class="shell footer-row"><a class="brand" href="#">AirAware<span>.</span></a><span id="footer-location">Historical PM2.5 forecasting prototype</span></div></footer>
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id),finite=v=>typeof v==='number' && Number.isFinite(v);
+  const dateOK=v=>typeof v==='string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v+'T00:00:00Z')) && new Date(v+'T00:00:00Z').toISOString().slice(0,10)===v;
+  const formatDate=v=>new Date(v+'T00:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+  const fmt=v=>v.toFixed(2),title=v=>v.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const DEFAULT_FIELDS=[{id:'pm25',label:'Daily average PM2.5',unit:'µg/m³',min:0},{id:'temperature_c',label:'Temperature',unit:'°C'},{id:'humidity_pct',label:'Relative humidity',unit:'%',min:0,max:100},{id:'precipitation_mm',label:'Precipitation',unit:'mm',min:0},{id:'wind_speed_ms',label:'Wind speed',unit:'m/s',min:0}];
+  let state=null,model=null,selected=null;
+  function error(message=''){$('load-error').textContent=message;$('load-error').hidden=!message;}
+  function inference(m){return m.inference || (m.coefficients?{type:'linear',intercept:m.intercept,coefficients:m.coefficients}:m.id==='persistence'?{type:'persistence',feature:'pm25'}:{type:'colab'});}
+  function localPrediction(m,values){
+    const spec=inference(m);
+    if(spec.type==='linear')return spec.intercept+m.features.reduce((sum,f)=>sum+spec.coefficients[f]*values[f],0);
+    if(spec.type==='persistence')return values[spec.feature || 'pm25'];
+    if(spec.type==='forest')return spec.trees.reduce((sum,t)=>{
+      let node=0,steps=0;
+      while(t.left[node]!==-1){if(++steps>t.left.length)throw new Error('Invalid tree structure.');node=Math.fround(values[m.features[t.feature[node]]])<=t.threshold[node]?t.left[node]:t.right[node];}
+      return sum+t.value[node];
+    },0)/spec.trees.length;
+    if(spec.type==='ensemble')return spec.components.reduce((sum,c)=>sum+localPrediction({features:c.features,inference:c},values),0)/spec.components.length;
+    return null;
+  }
+  function validateSpec(spec,features,depth=0){
+    if(depth>4)throw new Error('Invalid nested model.');
+    if(spec.type==='linear' && (!finite(spec.intercept) || !features.every(f=>finite(spec.coefficients?.[f]))))throw new Error('A linear model needs its intercept and a coefficient for every input.');
+    if(spec.type==='forest'){
+      if(!Array.isArray(spec.trees) || !spec.trees.length)throw new Error('A forest needs fitted trees.');
+      for(const t of spec.trees){
+        const n=t.left?.length;
+        if(!n || !['left','right','feature','threshold','value'].every(k=>Array.isArray(t[k]) && t[k].length===n))throw new Error('Invalid fitted tree arrays.');
+        for(let i=0;i<n;i++)if(!finite(t.value[i]) || !finite(t.threshold[i]) || (t.left[i]===-1?t.right[i]!==-1:!Number.isInteger(t.feature[i]) || t.feature[i]<0 || t.feature[i]>=features.length || ![t.left[i],t.right[i]].every(v=>Number.isInteger(v) && v>i && v<n)))throw new Error('Invalid fitted tree node.');
+      }
+    }
+    if(spec.type==='ensemble'){
+      if(!Array.isArray(spec.components) || !spec.components.length)throw new Error('An ensemble needs components.');
+      for(const c of spec.components){if(!Array.isArray(c.features) || !c.features.length || !c.features.every(f=>features.includes(f)) || !['linear','forest','ensemble'].includes(c.type))throw new Error('Invalid ensemble component.');validateSpec(c,c.features,depth+1);}
+    }
+  }
+  function fieldDefinition(id,s=state){return s?.definitions.find(f=>f.id===id) || DEFAULT_FIELDS.find(f=>f.id===id) || {id,label:title(id),unit:''};}
+  function inputValid(value,def){return finite(value) && (!finite(def.min) || value>=def.min) && (!finite(def.max) || value<=def.max);}
+  function modelFields(m){return [...new Set(['pm25',...m.features])];}
+  function prepare(d){
+    if(!d || d.demo!==false)throw new Error('Choose a real notebook export with demo set to false.');
+    if(String(d.schema_version)!=='1')throw new Error('This export uses an unsupported format.');
+    const daily=d.daily,p=d.predictions?.validation;
+    if(!daily || !Array.isArray(daily.date) || !daily.date.length || !daily.date.every(dateOK) || new Set(daily.date).size!==daily.date.length)throw new Error('The export needs unique, valid daily dates.');
+    if(!p || !Array.isArray(p.date) || !p.date.length)throw new Error('The export needs historical validation examples.');
+    const n=p.date.length;
+    if(!Array.isArray(p.target_date) || !Array.isArray(p.actual) || p.target_date.length!==n || p.actual.length!==n || !p.date.every((date,i)=>dateOK(date) && dateOK(p.target_date[i]) && Date.parse(p.target_date[i])-Date.parse(date)===86400000 && finite(p.actual[i])) || new Set(p.date).size!==n)throw new Error('Validation rows need numeric measurements and unique next-day dates.');
+    if(!Array.isArray(d.models) || !d.models.length || new Set(d.models.map(m=>m.id)).size!==d.models.length)throw new Error('The export needs a list of models with unique IDs.');
+    const definitions=Array.isArray(d.feature_definitions)?d.feature_definitions:DEFAULT_FIELDS;
+    if(!definitions.every(f=>typeof f.id==='string' && /^[a-zA-Z][a-zA-Z0-9_]*$/.test(f.id) && (!finite(f.min) || !finite(f.max) || f.min<=f.max)) || new Set(definitions.map(f=>f.id)).size!==definitions.length)throw new Error('Feature definitions must have unique IDs and valid input ranges.');
+    const baselineId=d.baseline_model_id || 'persistence';
+    const models=d.models.map(raw=>{const m={...raw,name:raw.name || title(raw.id || ''),features:raw.features || (raw.id===baselineId?['pm25']:[])};
+      if(typeof m.id!=='string' || !/^[a-zA-Z][a-zA-Z0-9_-]*$/.test(m.id) || ['date','target_date','actual'].includes(m.id) || !Array.isArray(m.features) || !m.features.length || new Set(m.features).size!==m.features.length || !m.features.every(f=>typeof f==='string' && /^[a-zA-Z][a-zA-Z0-9_]*$/.test(f)))throw new Error('Each model needs a non-reserved ID and a list of input features.');
+      if(!Array.isArray(p[m.id]) || p[m.id].length!==n || !p[m.id].every(finite) || !finite(m.mae?.validation))throw new Error('Each model needs numeric validation predictions and a validation MAE.');
+      const mae=p.actual.reduce((sum,v,i)=>sum+Math.abs(p[m.id][i]-v),0)/n;
+      if(Math.abs(mae-m.mae.validation)>.015)throw new Error('The exported MAE does not match the validation predictions. Re-run the export cell.');
+      const spec=inference(m);
+      validateSpec(spec,m.features);
+      for(const f of modelFields(m))if(!Array.isArray(daily[f]) || daily[f].length!==daily.date.length)throw new Error('Missing daily input data: '+f+'.');
+      return m;
+    });
+    const baseline=models.find(m=>m.id===baselineId),choices=models.filter(m=>m.id!==baselineId && m.kind!=='baseline');
+    if(!baseline || !choices.length)throw new Error('The export needs a persistence baseline and at least one prediction model.');
+    const ix=new Map(daily.date.map((date,i)=>[date,i]));
+    const allFields=[...new Set(models.flatMap(modelFields))];
+    const rows=p.date.map((day,i)=>({day,index:i,target:p.target_date[i],actual:p.actual[i],values:Object.fromEntries(allFields.map(f=>[f,daily[f][ix.get(day)]]))})).sort((a,b)=>a.day.localeCompare(b.day));
+    const candidate={data:d,p,daily,models,choices,baseline,definitions,rows,unit:d.units || 'µg/m³'};
+    for(const m of models){
+      const complete=rows.filter(r=>modelFields(m).every(f=>inputValid(r.values[f],fieldDefinition(f,candidate))));
+      if(!complete.length)throw new Error('No complete historical inputs were found for '+m.name+'.');
+      if(complete.some(r=>{const predicted=localPrediction(m,r.values);return predicted!==null && (!finite(predicted) || Math.abs(predicted-p[m.id][r.index])>.02);}))throw new Error('The model weights or inputs do not match the validation predictions. Re-run the export cell.');
+    }
+    return candidate;
+  }
+  function clearResult(){
+    $('prediction').value='—';$('baseline').textContent='—';$('change').textContent='—';$('actual-row').hidden=true;$('input-actual-row').hidden=true;
+    $('target-date').textContent=selected?formatDate(selected.target):'Next day';$('result-badge').textContent=state?'Ready to predict':'Awaiting data';
+    $('result-context').textContent='Choose an input date to see the prediction for the following day.';
+    $('interpretation').textContent='The baseline assumes the next day’s PM2.5 equals the input day’s average.';
+    $('result-note').textContent='Historical estimates, not a live forecast or an official air-quality advisory. PM2.5 concentration is not an AQI score.';
+  }
+  function invalidate(){selected=null;$('predict').disabled=true;clearResult();}
+  function load(d){
+    const next=prepare(d);
+    const chosen=next.choices.find(m=>m.id==='ensemble_history') || next.choices.find(m=>m.id===d.default_model_id) || next.choices[0];
+    if(!['linear','forest','ensemble','persistence'].includes(inference(chosen).type))throw new Error('This export is missing the fitted model parameters. Re-run the notebook export cell.');
+    state=next;model=chosen;invalidate();error();$('calendar-date').disabled=false;
+    const location=[d.location?.name,d.location?.state].filter(Boolean).join(', ') || d.location?.site_id || 'Loaded station';
+    $('station-name').textContent=location+' · Historical prototype';$('footer-location').textContent=location+' · Historical PM2.5 forecasting prototype';
+    $('data-status').textContent='Recorded data through '+formatDate([...state.daily.date].sort().at(-1));
+    $('prediction-unit').textContent=state.unit;document.querySelectorAll('.result-unit').forEach(el=>el.textContent=state.unit);
+    $('model-name').textContent=model.name;renderEvidence();
+    const latest=[...state.daily.date].sort().reverse().find(day=>day.startsWith('2026-') && calendarValues(day));
+    $('calendar-date').value=latest || '';chooseCalendar();
+  }
+  const shiftDay=(day,offset)=>new Date(Date.parse(day+'T00:00:00Z')+offset*86400000).toISOString().slice(0,10);
+  function calendarValues(day){
+    if(!dateOK(day) || !day.startsWith('2026-'))return null;
+    const days=[shiftDay(day,-2),shiftDay(day,-1),day],indices=days.map(d=>state.daily.date.indexOf(d));
+    if(indices.some(i=>i<0) || !indices.every(i=>inputValid(state.daily.pm25[i],fieldDefinition('pm25'))))return null;
+    const [a,b,c]=indices,values=Object.fromEntries(modelFields(model).map(f=>[f,state.daily[f]?.[c]]));
+    values.pm25_yesterday=state.daily.pm25[b];values.pm25_mean_3days=(state.daily.pm25[a]+state.daily.pm25[b]+state.daily.pm25[c])/3;values.pm25_change=state.daily.pm25[c]-state.daily.pm25[b];
+    return modelFields(model).every(f=>inputValid(values[f],fieldDefinition(f)))?values:null;
+  }
+  function showCalendarActuals(day){
+    for(const [prefix,date] of [['input-',day],['',shiftDay(day,1)]]){
+      const i=state.daily.date.indexOf(date),pm=state.daily.pm25[i],aqi=state.daily.aqi?.[i],source=state.daily.source?.[i];
+      $(prefix+'actual-row').hidden=false;$(prefix+'actual').textContent=finite(pm)?fmt(pm):'Unavailable';
+      $(prefix+'actual-date').textContent=formatDate(date)+(finite(pm)?' · recorded daily average'+(source==='AirNow'?' · preliminary AirNow':''):' · no recorded measurement in this export');
+      $(prefix==='input-'?'input-aqi':'actual-aqi').textContent=finite(aqi)?'EPA AQI: '+aqi:'AQI unavailable';
+    }
+  }
+  function chooseCalendar(){
+    if(!state)return;
+    const day=$('calendar-date').value;invalidate();error();
+    if(!day){$('history-window').textContent='Use this date and the two preceding calendar days.';$('input-hint').textContent='Choose a 2026 input date. Recorded pollution and weather are loaded automatically.';return;}
+    if(!dateOK(day) || !day.startsWith('2026-')){error('Choose a valid date in 2026.');return;}
+    const values=calendarValues(day);
+    $('history-window').textContent='Input interval: '+formatDate(shiftDay(day,-2))+'–'+formatDate(day)+'. Forecast: '+formatDate(shiftDay(day,1))+'.';
+    $('target-date').textContent=formatDate(shiftDay(day,1));showCalendarActuals(day);
+    if(!values){
+      error('Three complete calendar days of PM2.5 and input-day weather are required. Loaded data ends '+formatDate([...state.daily.date].sort().at(-1))+'.');
+      $('input-hint').textContent='Recorded inputs are incomplete for this date. Choose another date.';return;
+    }
+    selected={day,target:shiftDay(day,1),values};
+    $('input-hint').textContent='Pollution history and weather for this date were loaded automatically.';
+    try{
+      const prediction=localPrediction(model,values);
+      if(!finite(prediction))throw new Error('A prediction could not be calculated from the recorded inputs.');
+      showResult(prediction,values);$('predict').disabled=false;
+    }catch(e){selected=null;error(e.message || 'The prediction could not be calculated.');}
+  }
+  function showResult(prediction,values){
+    const baseline=values.pm25,change=prediction-baseline;
+    $('prediction').value=fmt(prediction);$('baseline').textContent=fmt(baseline);$('change').textContent=(change>0?'+':'')+fmt(change);
+    $('model-name').textContent=model.name;$('result-badge').textContent='Date-based estimate';$('target-date').textContent=formatDate(selected.target);
+    $('result-context').textContent='Estimate for '+formatDate(selected.target)+', using recorded pollution history through '+formatDate(selected.day)+' and input-day weather.';
+    $('interpretation').textContent=model.name+' predicts '+fmt(Math.abs(change))+' '+state.unit+' '+(change>=0?'higher':'lower')+' PM2.5 than the persistence baseline.';
+    showCalendarActuals(selected.day);
+    $('result-note').textContent=prediction<0?'This model returned a negative estimate, which is physically impossible. The value is shown without clipping so the limitation is visible.':'Historical estimates, not a live forecast or an official air-quality advisory. PM2.5 concentration is not an AQI score.';
+  }
+  function runPrediction(){
+    if(!state || !$('predict-form').reportValidity())return;
+    chooseCalendar();
+    if(selected && !$('predict').disabled)$('result').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  }
+  function renderEvidence(){
+    const p=state.p,dates=[...p.target_date].sort(),period=formatDate(dates[0])+'–'+formatDate(dates.at(-1));
+    $('evidence-empty').hidden=true;$('evidence-results').hidden=false;
+    $('validation-period').textContent=p.date.length+' validation days · '+period;
+    $('model-mae-label').textContent=model.name+' · validation MAE';$('model-mae').textContent=model.mae.validation.toFixed(3);$('baseline-mae').textContent=state.baseline.mae.validation.toFixed(3);
+    $('mae-caption').textContent='Mean absolute error (MAE) is the average size of a prediction error. Lower is better. Both estimates use the same '+p.date.length+' validation days. Scores are checked against the exported predictions.';
+    $('model-legend').textContent=model.name;$('chart-title').textContent='Predicted vs. observed PM2.5 · '+period;
+    const sources=state.data.sources;$('sources').textContent=sources?Object.values(sources).filter(v=>typeof v==='string').join('. '):'Data sources were not included in this export.';
+    const training=model.training_period;$('training-period').textContent=training && dateOK(training.start) && dateOK(training.end)?'Training targets: '+formatDate(training.start)+'–'+formatDate(training.end)+'.':'';
+    drawChart();
+  }
+  function drawChart(){
+    const p=state.p,ns='http://www.w3.org/2000/svg',w=Math.max(200,Math.round($('validation-chart').clientWidth || 960)),h=300,pad={l:56,r:20,t:24,b:44};
+    const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('role','img');svg.setAttribute('aria-label',model.name+' predictions and observed daily average PM2.5 over the exported validation period. Numeric mean absolute errors are shown above.');
+    const add=(tag,attrs,text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));if(text!==undefined)el.textContent=text;svg.append(el);};
+    const rows=p.target_date.map((date,i)=>({date,actual:p.actual[i],prediction:p[model.id][i]})).sort((a,b)=>a.date.localeCompare(b.date));
+    const lo=rows.reduce((min,row)=>Math.min(min,row.actual,row.prediction),0),hi=rows.reduce((max,row)=>Math.max(max,row.actual,row.prediction),1)*1.08,first=Date.parse(rows[0].date),last=Date.parse(rows.at(-1).date);
+    const x=date=>pad.l+(Date.parse(date)-first)/(last-first || 1)*(w-pad.l-pad.r),y=value=>h-pad.b-(value-lo)/(hi-lo)*(h-pad.t-pad.b);
+    for(let i=0;i<4;i++){const value=lo+(hi-lo)*i/3;add('line',{x1:pad.l,x2:w-pad.r,y1:y(value),y2:y(value),stroke:'#b5d5e3'});add('text',{x:pad.l-10,y:y(value)+5,'text-anchor':'end'},value.toFixed(0));}
+    add('text',{x:pad.l,y:16},state.unit);
+    const ticks=w<600?[0,rows.length-1]:[0,Math.floor((rows.length-1)/2),rows.length-1];
+    ticks.filter((v,i,a)=>a.indexOf(v)===i).forEach((index,i,a)=>{const label=w<600?new Date(rows[index].date+'T00:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'}):formatDate(rows[index].date);add('text',{x:x(rows[index].date),y:h-10,'text-anchor':i===0?'start':i===a.length-1?'end':'middle'},label);});
+    for(const key of ['actual','prediction']){let path='';rows.forEach((row,i)=>{const gap=i && Date.parse(row.date)-Date.parse(rows[i-1].date)>86400000;path+=`${!i || gap?'M':'L'}${x(row.date).toFixed(2)},${y(row[key]).toFixed(2)} `;});add('path',{d:path,fill:'none',stroke:key==='actual'?'#163e52':'#991954','stroke-width':key==='actual'?1.8:2.2,...(key==='actual'?{'stroke-dasharray':'5 4'}:{})});}
+    $('validation-chart').replaceChildren(svg);
+  }
+  $('evidence-details').addEventListener('toggle',()=>{if(state && $('evidence-details').open)drawChart();});
+  window.addEventListener?.('resize',()=>{if(state && $('evidence-details').open)drawChart();});
+  $('calendar-date').addEventListener('input',()=>{invalidate();error();});
+  $('calendar-date').addEventListener('change',chooseCalendar);
+  $('predict-form').addEventListener('submit',event=>{event.preventDefault();runPrediction();});
+  function loadError(message){$('data-status').textContent='Prediction data unavailable';error(message);}
+  if(window.AIRAWARE_EXPORT){try{load(window.AIRAWARE_EXPORT);}catch(e){loadError(e.message);}}
+  else if(location.protocol!=='file:'){
+    fetch('airaware_export.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Prediction data could not be loaded. Re-run the notebook export and viewer cells.');return r.json();}).then(load).catch(e=>loadError(e.message));
+  }else loadError('Open the UI through the notebook viewer to load its prediction data.');
+})();
+</script>
+</body>
+</html>
